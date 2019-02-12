@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="MainMapper">
+
+	<select id="loginCheck" parameterType="kr.co.one.MbrVO" resultType="kr.co.one.MbrVO">
+		select MBR_NO, MBR_ID, MBR_NM
+		from mbr
+		where mbr_id = #{mbr_id}
+		and mbr_pwd = #{mbr_pwd}
+	</select>
+
+	<select id="idCheck" parameterType="kr.co.one.MbrVO" resultType="int">
+		select count(*) from mbr where mbr_id = #{mbr_id}
+	</select>
+	
+	<insert id="join_form_ins" parameterType="kr.co.one.MbrVO"> 
+		insert into mbr values(mbr_no_seq.nextval
+			,#{mbr_id},#{mbr_nm},#{mbr_pwd}
+			,#{mbr_tel},#{mbr_email}
+		)
+	</insert>
+	
+
+</mapper>

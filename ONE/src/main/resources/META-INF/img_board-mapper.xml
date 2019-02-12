@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="img_board-mapper">
+
+	<select id="img_list_selc" parameterType="kr.co.one.ImgVO" resultType="kr.co.one.ImgVO">
+			select IMG_NO,IMG,IMG_TITLE ,IMG_DATE 
+			  from imgbrd 			
+			 order by img_no desc
+	</select>
+	
+	<select id="select_img_no" parameterType="kr.co.one.ImgVO" resultType="String">
+		select img_no_seq.nextval from dual
+	</select>
+	
+	<insert id="insert_img" parameterType="kr.co.one.ImgVO" >
+		insert into imgbrd (img_date, img_title, img, img_no) 
+			values(#{img_date},#{img_title},#{img},#{img_no})
+	</insert>
+	
+		<select id="maim_img_list" resultType="kr.co.one.ImgVO">
+			select img_no, img, img_title, img_date 
+			  from imgbrd  
+			 <![CDATA[  
+			 where rownum <= 3
+			 ]]>
+			 order by img_no desc
+	</select>
+
+	
+</mapper>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="board-mapper">
+
+	<select id="freeBoardList" parameterType="kr.co.one.BoardVO" resultType="kr.co.one.BoardVO">
+		select brd_no, brd_title, brd_writer, brd_contents, brd_write_date
+		,brd_view_cnt, brd_like_cnt
+		from 
+			(select brd_no, brd_title, brd_writer, brd_contents, brd_write_date
+			,brd_view_cnt, brd_like_cnt, ROW_NUMBER() OVER(ORDER BY brd_no desc) rn
+			from brd) origin
+		where rn  between #{beginRNum} and #{endRNum} 
+	</select>
+	
+	<insert id="insbrd" parameterType="kr.co.one.BoardVO">
+		insert into brd values(brd_no_seq.nextval
+				,#{brd_title},#{brd_writer},#{brd_contents}, sysdate, 0
+				,0)
+	</insert>
+	
+	<select id="detailselc" parameterType="kr.co.one.BoardVO" resultType="kr.co.one.BoardVO">
+		select brd_no, brd_title, brd_writer, brd_contents, brd_write_date, brd_view_cnt
+		,brd_like_cnt
+		from brd where brd_no=#{brd_no}
+	</select>
+	
+	<update id="upd_brd_view_cnt" parameterType="kr.co.one.BoardVO">
+		update brd set brd_view_cnt = nvl(brd_view_cnt,0) + 1
+		where brd_no = #{brd_no}
+	</update>
+	
+	<delete id="del_brd" parameterType="kr.co.one.BoardVO">	
+		delete from brd where brd_no=#{brd_no}
+	</delete>
+	
+	<update id="upd_brd_like_cnt" parameterType="kr.co.one.BoardVO">	
+		update brd set brd_like_cnt = nvl(brd_like_cnt,0) + 1
+		where brd_no=#{brd_no}
+	</update>
+	
+	<update id="upd_brd" parameterType="kr.co.one.BoardVO">
+		update brd 
+		   set brd_title = #{brd_title}
+		      ,brd_writer = #{brd_writer}
+		      ,brd_contents = #{brd_contents}
+		      ,brd_write_date = sysdate
+		 where brd_no = #{brd_no}
+	</update>
+	
+	<select id="selBrdListCnt" parameterType="java.util.HashMap" resultType="int">
+		select count(brd_no) totalCnt from brd 
+			where 1 = 1
+	</select>
+
+</mapper>
